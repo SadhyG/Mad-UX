@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShowReady — Artist Exhibition Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --white:       #FFFFFF;
+  --bg:          #F7F8FA;
+  --sidebar-bg:  #1A1A2E;
+  --sidebar-ico: rgba(255,255,255,.5);
+  --sidebar-act: rgba(255,255,255,.95);
+  --accent:      #6C5CE7;
+  --accent-lt:   #A29BFE;
+  --accent-pale: #F0EEFF;
+  --teal:        #00CEC9;
+  --teal-pale:   #E0FAF9;
+  --green:       #00B894;
+  --green-pale:  #E0F8F2;
+  --gold:        #FDCB6E;
+  --gold-pale:   #FFF8E7;
+  --coral:       #FF7675;
+  --coral-pale:  #FFEEEE;
+  --pink:        #FD79A8;
+  --ink:         #1A1A2E;
+  --ink-70:      #555568;
+  --ink-40:      #9B9BAF;
+  --ink-20:      #CDCDD8;
+  --ink-10:      #E8E8EF;
+  --ink-05:      #F3F3F7;
+  --border:      #E8E8EF;
+  --sh-xs:       0 1px 3px rgba(26,26,46,.05);
+  --sh-sm:       0 2px 8px rgba(26,26,46,.08);
+  --sh-md:       0 8px 24px rgba(26,26,46,.10);
+  --sh-lg:       0 12px 40px rgba(26,26,46,.12);
+  --r-xs:        8px;
+  --r-sm:        12px;
+  --r-md:        16px;
+  --r-lg:        20px;
+  --r-xl:        28px;
+  --ff:          'DM Sans', system-ui, -apple-system, sans-serif;
+  /* Gradient colors matching the reference */
+  --g-cyan:      #43E8D8;
+  --g-green:     #A8E063;
+  --g-yellow:    #F7DC6F;
+  --g-orange:    #F0A04B;
+  --g-pink:      #E879A8;
+  --g-magenta:   #C77DBA;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{font-size:15px}
+body{font-family:var(--ff);background:linear-gradient(135deg,var(--g-cyan) 0%,var(--g-green) 20%,var(--g-yellow) 40%,var(--g-orange) 60%,var(--g-pink) 80%,var(--g-magenta) 100%);color:var(--ink);height:100vh;overflow:hidden;display:flex;padding:10px}
+
+/* ─── ICON SIDEBAR ─────────────────────── */
+.icon-sidebar{width:58px;min-width:58px;background:var(--sidebar-bg);border-radius:var(--r-lg) 0 0 var(--r-lg);display:flex;flex-direction:column;align-items:center;padding:16px 0;gap:6px;z-index:10}
+.isb-logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--g-cyan),var(--accent));display:flex;align-items:center;justify-content:center;margin-bottom:12px;cursor:pointer;transition:transform .2s}
+.isb-logo:hover{transform:scale(1.08)}
+.isb-logo svg{width:20px;height:20px;fill:white}
+.isb-sep{width:24px;height:1px;background:rgba(255,255,255,.1);margin:6px 0}
+.isb-btn{width:38px;height:38px;border-radius:10px;border:none;background:transparent;color:var(--sidebar-ico);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;position:relative;font-size:17px}
+.isb-btn:hover{background:rgba(255,255,255,.08);color:rgba(255,255,255,.8)}
+.isb-btn.active{background:rgba(255,255,255,.12);color:var(--sidebar-act)}
+.isb-btn.active::before{content:'';position:absolute;left:0;top:25%;bottom:25%;width:2.5px;background:var(--g-cyan);border-radius:2px}
+.isb-bottom{margin-top:auto;display:flex;flex-direction:column;align-items:center;gap:6px}
+.isb-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--pink));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:white;cursor:pointer;transition:transform .15s}
+.isb-avatar:hover{transform:scale(1.08)}
+
+/* ─── MAIN CONTAINER ──────────────────── */
+.main-wrap{flex:1;display:flex;flex-direction:column;background:var(--white);border-radius:0 var(--r-lg) var(--r-lg) 0;overflow:hidden;box-shadow:var(--sh-lg)}
+
+/* ─── TOP NAV BAR ─────────────────────── */
+.topnav{height:52px;min-height:52px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:center;padding:0 20px;gap:16px;background:var(--white);position:relative;z-index:5}
+.tn-arrow{width:30px;height:30px;border-radius:8px;border:1px solid var(--border);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink-40);font-size:14px;transition:all .15s}
+.tn-arrow:hover{border-color:var(--ink-20);color:var(--ink-70);background:var(--ink-05)}
+.tn-center{display:flex;align-items:center;gap:8px}
+.tn-ico{font-size:16px}
+.tn-title{font-size:14px;font-weight:600;color:var(--ink)}
+.tn-label{font-size:12px;color:var(--ink-40);position:absolute;left:80px}
+.tn-label-r{font-size:12px;color:var(--ink-40);position:absolute;right:80px}
+
+/* ─── CONTENT AREA ────────────────────── */
+.content-area{flex:1;display:flex;overflow:hidden}
+
+/* ─── CHAT PANEL ──────────────────────── */
+.chat-panel{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;background:var(--bg)}
+
+.chat-body{flex:1;overflow-y:auto;padding:24px 32px;display:flex;flex-direction:column;gap:16px;scroll-behavior:smooth}
+.chat-body::-webkit-scrollbar{width:4px}
+.chat-body::-webkit-scrollbar-thumb{background:var(--ink-20);border-radius:4px}
+
+/* Messages */
+.msg-group{display:flex;flex-direction:column;gap:6px;animation:msgIn .28s ease both}
+@keyframes msgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.msg-row{display:flex;gap:0;align-items:flex-start;max-width:680px}
+.msg-row.usr{margin-left:auto;flex-direction:row-reverse}
+
+.bubble{padding:16px 20px;border-radius:var(--r-md);font-size:13.5px;line-height:1.7;color:var(--ink)}
+.bubble.ai{background:var(--white);border:1px solid var(--border);box-shadow:var(--sh-xs);border-radius:var(--r-md);max-width:680px}
+.bubble.usr{background:var(--ink-05);border:1px solid var(--border);border-radius:var(--r-md);color:var(--ink)}
+.bubble strong{font-weight:600}
+.bubble em{color:var(--ink-70);font-style:italic}
+
+/* Option buttons */
+.opt-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.opt{padding:8px 16px;border:1.5px solid var(--border);border-radius:24px;background:var(--white);font-family:var(--ff);font-size:13px;font-weight:500;color:var(--ink);cursor:pointer;transition:all .15s}
+.opt:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-pale);transform:translateY(-1px)}
+.opt.sel{background:var(--accent);border-color:var(--accent);color:#fff}
+.opt.off{opacity:.35;cursor:not-allowed;pointer-events:none}
+
+/* Slider */
+.slider-block{margin-top:12px;padding:14px 16px;background:var(--ink-05);border:1px solid var(--border);border-radius:var(--r-sm)}
+.sl-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;font-size:12px;color:var(--ink-70);font-weight:500}
+.sl-val{font-size:17px;font-weight:700;color:var(--accent)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:4px;background:var(--ink-20);border-radius:2px;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;background:var(--accent);border-radius:50%;box-shadow:0 1px 5px rgba(108,92,231,.4);transition:transform .15s}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
+input[type=range]:disabled{opacity:.5;cursor:default}
+.sl-ends{display:flex;justify-content:space-between;margin-top:3px;font-size:10px;color:var(--ink-40)}
+
+/* Map */
+.map-block{margin-top:12px;height:170px;border-radius:var(--r-sm);overflow:hidden;border:1px solid var(--border);background:linear-gradient(135deg,#E8E8EF,#D4D4E0);position:relative;display:flex;align-items:center;justify-content:center}
+.map-lines{position:absolute;inset:0;opacity:.2}
+.map-grid-h,.map-grid-v{position:absolute;background:var(--ink-40)}
+.map-grid-h{left:0;right:0;height:1px}
+.map-grid-v{top:0;bottom:0;width:1px}
+.map-pin{position:absolute;top:47%;left:50%;transform:translate(-50%,-100%);font-size:26px;filter:drop-shadow(0 2px 5px rgba(0,0,0,.2));animation:pinDrop .4s ease}
+@keyframes pinDrop{from{transform:translate(-50%,-130%);opacity:0}to{transform:translate(-50%,-100%);opacity:1}}
+.map-badge{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:#fff;border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:500;color:var(--ink);box-shadow:var(--sh-xs);white-space:nowrap}
+
+/* Rate grid */
+.rate-grid{margin-top:10px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.rate-box{padding:10px 6px;border:1.5px solid var(--border);border-radius:var(--r-xs);text-align:center;background:var(--white)}
+.rate-box.best{background:var(--accent-pale);border-color:var(--accent)}
+.rate-lbl{font-size:10px;font-weight:600;color:var(--ink-40);letter-spacing:.3px;text-transform:uppercase;margin-bottom:3px}
+.rate-val{font-size:15px;font-weight:700;color:var(--ink)}
+.rate-box.best .rate-val{color:var(--accent)}
+
+/* Insurance form */
+.ins-form{margin-top:12px;padding:16px;background:var(--white);border:1px solid var(--border);border-radius:var(--r-sm);box-shadow:var(--sh-xs)}
+.ins-row-form{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.fl{display:flex;flex-direction:column;gap:4px}
+.fl label{font-size:10.5px;font-weight:600;color:var(--ink-40);letter-spacing:.3px;text-transform:uppercase}
+.fl input{padding:9px 11px;border:1.5px solid var(--border);border-radius:var(--r-xs);font-family:var(--ff);font-size:13px;color:var(--ink);background:var(--ink-05);outline:none;transition:border-color .15s}
+.fl input:focus{border-color:var(--accent);background:var(--white)}
+.fl input:disabled{opacity:.6}
+
+/* Generate button */
+.gen-btn{display:inline-flex;align-items:center;gap:7px;margin-top:10px;padding:10px 20px;background:linear-gradient(135deg,var(--accent),var(--accent-lt));color:#fff;border:none;border-radius:24px;font-family:var(--ff);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 2px 10px rgba(108,92,231,.3)}
+.gen-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 5px 16px rgba(108,92,231,.35)}
+.gen-btn:disabled{opacity:.7;cursor:default}
+
+/* Upload zone */
+.upload-zone{margin-top:12px;border:1.5px dashed var(--ink-20);border-radius:var(--r-sm);padding:18px;text-align:center;cursor:pointer;transition:all .2s;background:var(--white)}
+.upload-zone:hover{border-color:var(--accent);background:var(--accent-pale)}
+.uz-icon{font-size:20px;margin-bottom:5px}
+.uz-txt{font-size:13px;font-weight:500;color:var(--ink-70)}
+.uz-sub{font-size:11px;color:var(--ink-40);margin-top:2px}
+
+/* Typing indicator */
+.typing-row{display:flex;gap:0;align-items:flex-start}
+.typing-dots{display:flex;gap:4px;align-items:center;padding:14px 18px;background:var(--white);border:1px solid var(--border);border-radius:var(--r-md);box-shadow:var(--sh-xs)}
+.td{width:6px;height:6px;background:var(--ink-20);border-radius:50%;animation:tdBounce 1.1s infinite}
+.td:nth-child(2){animation-delay:.18s}
+.td:nth-child(3){animation-delay:.36s}
+@keyframes tdBounce{0%,70%,100%{transform:translateY(0);opacity:.4}35%{transform:translateY(-5px);opacity:1}}
+
+/* Thinking text */
+.thinking-row{display:flex;align-items:center;gap:8px;padding:4px 0;margin-top:-8px}
+.thinking-ico{font-size:16px;animation:sparkle 1.5s ease infinite}
+@keyframes sparkle{0%,100%{opacity:.5;transform:rotate(0deg)}50%{opacity:1;transform:rotate(15deg)}}
+.thinking-txt{font-size:13px;color:var(--ink-40);font-weight:400}
+
+/* Chat input */
+.chat-footer{padding:14px 32px 18px;background:var(--bg);border-top:1px solid var(--border)}
+.ci-wrap{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--white);border:1.5px solid var(--border);border-radius:var(--r-xl);transition:border-color .15s,box-shadow .15s;box-shadow:var(--sh-xs)}
+.ci-wrap:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(108,92,231,.08)}
+.ci{flex:1;border:none;background:transparent;font-family:var(--ff);font-size:14px;color:var(--ink);outline:none;resize:none;line-height:1.4}
+.ci::placeholder{color:var(--ink-40)}
+.ci-btns{display:flex;gap:4px;align-items:center}
+.ib{width:34px;height:34px;border-radius:50%;border:none;background:transparent;color:var(--ink-40);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .15s}
+.ib:hover{background:var(--accent-pale);color:var(--accent)}
+.ib.send{background:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(108,92,231,.3)}
+.ib.send:hover{background:var(--accent-lt);transform:scale(1.06)}
+
+/* ─── RIGHT PANEL — PROJECT MILESTONES ─── */
+.dash{width:320px;min-width:320px;background:var(--white);border-left:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column}
+.dash::-webkit-scrollbar{width:3px}
+.dash::-webkit-scrollbar-thumb{background:var(--ink-20);border-radius:4px}
+
+.dash-head{padding:18px 18px 14px;border-bottom:1px solid var(--border)}
+.dh-title{font-size:15px;font-weight:700;color:var(--ink)}
+
+.dash-body{padding:10px;flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:4px}
+
+/* Project Docs Card */
+.proj-docs-card{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--ink-05);border-radius:var(--r-sm);margin-bottom:6px;cursor:pointer;transition:background .15s}
+.proj-docs-card:hover{background:var(--ink-10)}
+.proj-docs-ico{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-lt));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;box-shadow:0 2px 8px rgba(108,92,231,.2)}
+.proj-docs-lbl{font-size:13px;font-weight:600;color:var(--ink)}
+
+/* Accordion sections */
+.acc-section{border-bottom:1px solid var(--border)}
+.acc-header{display:flex;align-items:center;gap:10px;padding:13px 14px;cursor:pointer;transition:background .15s;user-select:none}
+.acc-header:hover{background:var(--ink-05)}
+.acc-circle{width:20px;height:20px;border-radius:50%;border:2px solid var(--ink-20);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;color:transparent;transition:all .25s}
+.acc-circle.done{background:var(--green);border-color:var(--green);color:white}
+.acc-circle.active{border-color:var(--accent);background:var(--accent-pale)}
+.acc-circle.active::after{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.acc-ico{font-size:16px;flex-shrink:0}
+.acc-title{flex:1;font-size:13px;font-weight:600;color:var(--ink)}
+.acc-chev{font-size:12px;color:var(--ink-40);transition:transform .25s}
+.acc-section.open .acc-chev{transform:rotate(180deg)}
+.acc-body{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.acc-section.open .acc-body{max-height:600px}
+.acc-inner{padding:4px 14px 14px 44px}
+.acc-desc{font-size:12.5px;color:var(--ink-70);line-height:1.6;margin-bottom:10px}
+.acc-sub-item{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12.5px;color:var(--ink-70);cursor:default}
+.acc-sub-arrow{color:var(--ink-40);font-size:11px}
+.acc-start-btn{margin-top:10px;font-size:13px;font-weight:700;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:color .15s}
+.acc-start-btn:hover{color:var(--accent)}
+
+/* Badge in accordion */
+.acc-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:12px;letter-spacing:.1px}
+.acc-badge.warn{background:var(--gold-pale);color:#C2913F}
+.acc-badge.ok{background:var(--green-pale);color:var(--green)}
+.acc-badge.off{background:var(--ink-05);color:var(--ink-40)}
+.acc-badge.info{background:var(--accent-pale);color:var(--accent)}
+
+/* Dashboard data inside accordions */
+.card-data{font-size:12.5px;color:var(--ink-70);line-height:1.7}
+
+/* Location data */
+.loc-table{display:flex;flex-direction:column;gap:0}
+.loc-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--ink-05)}
+.loc-row:last-child{border-bottom:none}
+.loc-lbl{font-size:11.5px;color:var(--ink-40)}
+.loc-val{font-size:12.5px;font-weight:600;color:var(--ink)}
+.loc-val.hi{color:var(--accent)}
+
+/* Budget donut */
+.bud-wrap{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.bud-canvas{flex-shrink:0;position:relative}
+.bud-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none}
+.bud-camt{font-size:16px;font-weight:700;color:var(--ink);display:block;line-height:1}
+.bud-clbl{font-size:9px;color:var(--ink-40);margin-top:1px}
+.bud-legend{flex:1}
+.bl-item{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.bl-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.bl-lbl{font-size:11px;color:var(--ink-40);flex:1}
+.bl-amt{font-size:11.5px;font-weight:600;color:var(--ink)}
+.bud-total{padding-top:8px;border-top:1px solid var(--ink-05);display:flex;justify-content:space-between;align-items:baseline}
+.bt-lbl{font-size:10.5px;font-weight:600;color:var(--ink-40);text-transform:uppercase;letter-spacing:.5px}
+.bt-val{font-size:17px;font-weight:700;color:var(--ink)}
+
+/* Insurance in dash */
+.ins-row-dash{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--ink-05);border-radius:var(--r-xs);margin-bottom:6px}
+.ins-ico{font-size:16px}
+.ins-lbl{font-size:11px;color:var(--ink-40)}
+.ins-val{font-size:13px;font-weight:600;color:var(--ink)}
+.ins-bigval{font-size:18px;font-weight:700;color:var(--ink)}
+.ins-badge{font-size:10px;font-weight:600;color:var(--gold);margin-left:auto}
+.cta-btn{width:100%;padding:10px 14px;border:1.5px solid var(--accent);color:var(--accent);background:transparent;border-radius:var(--r-xs);font-family:var(--ff);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;letter-spacing:.2px;margin-top:6px}
+.cta-btn:hover{background:var(--accent);color:#fff;transform:translateY(-1px);box-shadow:0 3px 10px rgba(108,92,231,.25)}
+
+/* Doc items */
+.doc-item{display:flex;align-items:center;gap:9px;padding:8px 10px;background:var(--ink-05);border-radius:var(--r-xs);margin-bottom:5px;cursor:pointer;transition:background .15s}
+.doc-item:hover{background:var(--accent-pale)}
+.doc-ico{width:28px;height:32px;background:var(--white);border:1px solid var(--border);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.doc-info{flex:1;min-width:0}
+.doc-nm{font-size:12px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.doc-meta{font-size:10px;color:var(--ink-40);margin-top:1px}
+.doc-dl{width:24px;height:24px;border-radius:50%;background:var(--white);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .15s;flex-shrink:0}
+.doc-dl:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* Empty states */
+.es{text-align:center;padding:16px 8px}
+.es-ico{font-size:24px;margin-bottom:6px;opacity:.4}
+.es-txt{font-size:12px;color:var(--ink-40);line-height:1.6}
+.es-acc{color:var(--accent);font-weight:500}
+
+/* Milestone items in accordion */
+.ms-item{display:flex;align-items:center;gap:8px;padding:5px 0}
+.ms-ico{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;flex-shrink:0}
+.ms-ico.lk{background:var(--ink-10);color:var(--ink-40)}
+.ms-ico.ip{background:var(--accent-pale);color:var(--accent);font-size:9px}
+.ms-ico.dn{background:var(--green-pale);color:var(--green)}
+.ms-txt{font-size:12px;flex:1;color:var(--ink-40)}
+.ms-txt.ip{color:var(--ink);font-weight:500}
+.ms-txt.dn{color:var(--ink-20);text-decoration:line-through}
+.ms-num{font-size:10px;color:var(--ink-20);font-weight:500}
+.ms-bar{height:3px;background:var(--ink-10);border-radius:2px;margin-bottom:10px;overflow:hidden}
+.ms-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--teal));border-radius:2px;transition:width .7s ease}
+
+/* Card pop animation */
+@keyframes cardPop{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
+.card-pop{animation:cardPop .35s ease both}
+
+/* Toast */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 20px;border-radius:20px;font-size:13px;font-weight:500;box-shadow:var(--sh-md);z-index:100;animation:toastIn .3s ease both}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+</style>
+</head>
+<body>
+
+<!-- ═══════ ICON SIDEBAR ═══════ -->
+<nav class="icon-sidebar">
+  <div class="isb-logo" title="ShowReady">
+    <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+  </div>
+
+  <button class="isb-btn" title="Projects" onclick="showToast('Projects view')">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+  </button>
+  <button class="isb-btn active" title="AI Chat">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  </button>
+  <button class="isb-btn" title="Contacts" onclick="showToast('Contacts')">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+  </button>
+
+  <div class="isb-sep"></div>
+
+  <div class="isb-bottom">
+    <button class="isb-btn" title="Settings">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+    <div class="isb-avatar" title="Maya Andersen">MA</div>
+  </div>
+</nav>
+
+<!-- ═══════ MAIN CONTAINER ═══════ -->
+<div class="main-wrap">
+
+  <!-- Top Nav -->
+  <div class="topnav">
+    <span class="tn-label">Project Name</span>
+    <button class="tn-arrow" onclick="showToast('Previous project')">‹</button>
+    <div class="tn-center">
+      <span class="tn-ico">📅</span>
+      <span class="tn-title" id="projTitle">Spring Gallery Show 2025</span>
+    </div>
+    <button class="tn-arrow" onclick="showToast('Next project')">›</button>
+    <span class="tn-label-r">Project Name</span>
+  </div>
+
+  <!-- Content: Chat + Dashboard -->
+  <div class="content-area">
+
+    <!-- CHAT PANEL -->
+    <div class="chat-panel">
+      <div class="chat-body" id="chatBody"></div>
+      <div class="chat-footer">
+        <div class="ci-wrap">
+          <button class="ib" title="Attach file" onclick="insertUploadPrompt()">📎</button>
+          <textarea class="ci" id="textInput" rows="1" placeholder="Ask ShowReady anything..." onkeydown="handleKey(event)"></textarea>
+          <div class="ci-btns">
+            <button class="ib" title="Voice input">🎤</button>
+            <button class="ib send" title="Send" onclick="sendFreeText()">➤</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD (RIGHT PANEL) -->
+    <aside class="dash" id="dashboard">
+      <div class="dash-head">
+        <div class="dh-title">Project Milestones</div>
+      </div>
+
+      <div class="dash-body">
+        <!-- Project Documents card -->
+        <div class="proj-docs-card" onclick="showToast('Project Documents')">
+          <div class="proj-docs-ico">📁</div>
+          <div class="proj-docs-lbl">Project Documents</div>
+        </div>
+
+        <!-- Location -->
+        <div class="acc-section open" id="accLoc">
+          <div class="acc-header" onclick="toggleAcc('accLoc')">
+            <div class="acc-circle active" id="locCircle"></div>
+            <span class="acc-title">📍 Location</span>
+            <span class="acc-badge warn" id="locBadge">Researching</span>
+            <span class="acc-chev">▼</span>
+          </div>
+          <div class="acc-body">
+            <div class="acc-inner">
+              <div id="locEmpty">
+                <div class="acc-desc">Find and evaluate exhibition spaces with AI-powered location analysis and market rate data.</div>
+                <div class="acc-sub-item"><span class="acc-sub-arrow">→</span> Search neighborhoods by zip</div>
+                <div class="acc-sub-item"><span class="acc-sub-arrow">→</span> View commercial rental rates</div>
+                <div class="acc-sub-item"><span class="acc-sub-arrow">→</span> Calculate square footage needs</div>
+                <div class="acc-start-btn">Start Planning →</div>
+              </div>
+              <div id="locData" style="display:none" class="loc-table">
+                <div class="loc-row"><span class="loc-lbl">Neighborhood</span><span class="loc-val" id="ld-area">—</span></div>
+                <div class="loc-row"><span class="loc-lbl">Suggested sq ft</span><span class="loc-val" id="ld-sqft">—</span></div>
+                <div class="loc-row"><span class="loc-lbl">Est. rate / sq ft</span><span class="loc-val hi" id="ld-rate">—</span></div>
+                <div class="loc-row"><span class="loc-lbl">Est. monthly</span><span class="loc-val" id="ld-rent">—</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Budget -->
+        <div class="acc-section" id="accBud">
+          <div class="acc-header" onclick="toggleAcc('accBud')">
+            <div class="acc-circle" id="budCircle"></div>
+            <span class="acc-title">💰 Budget Tracker</span>
+            <span class="acc-badge off" id="budBadge">Not Started</span>
+            <span class="acc-chev">▼</span>
+          </div>
+          <div class="acc-body">
+            <div class="acc-inner">
+              <div id="budEmpty">
+                <div class="acc-desc">Your cost breakdown appears as we work through each planning step. No spreadsheets needed.</div>
+              </div>
+              <div id="budData" style="display:none">
+                <div class="bud-wrap">
+                  <div class="bud-canvas" style="position:relative;width:85px;height:85px">
+                    <canvas id="donut" width="85" height="85"></canvas>
+                    <div class="bud-center"><span class="bud-camt" id="budCenterAmt">$4k</span><span class="bud-clbl">total</span></div>
+                  </div>
+                  <div class="bud-legend">
+                    <div class="bl-item"><div class="bl-dot" style="background:var(--accent)"></div><span class="bl-lbl">Space</span><span class="bl-amt" id="bl-space">$2,500</span></div>
+                    <div class="bl-item"><div class="bl-dot" style="background:var(--gold)"></div><span class="bl-lbl">Insurance</span><span class="bl-amt" id="bl-ins">$350</span></div>
+                    <div class="bl-item"><div class="bl-dot" style="background:var(--green)"></div><span class="bl-lbl">Production</span><span class="bl-amt" id="bl-prod">$800</span></div>
+                    <div class="bl-item"><div class="bl-dot" style="background:var(--pink)"></div><span class="bl-lbl">Marketing</span><span class="bl-amt" id="bl-mktg">$300</span></div>
+                  </div>
+                </div>
+                <div class="bud-total"><span class="bt-lbl">Total Budget</span><span class="bt-val" id="budTotal">$3,950</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Milestones -->
+        <div class="acc-section" id="accMs">
+          <div class="acc-header" onclick="toggleAcc('accMs')">
+            <div class="acc-circle active" id="msCircle"></div>
+            <span class="acc-title">📋 Milestones</span>
+            <span class="acc-badge warn" id="msBadge">1 of 8</span>
+            <span class="acc-chev">▼</span>
+          </div>
+          <div class="acc-body">
+            <div class="acc-inner">
+              <div class="ms-bar"><div class="ms-fill" id="msFill" style="width:12.5%"></div></div>
+              <div id="msList"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Insurance -->
+        <div class="acc-section" id="accIns">
+          <div class="acc-header" onclick="toggleAcc('accIns')">
+            <div class="acc-circle" id="insCircle"></div>
+            <span class="acc-title">🛡️ Insurance</span>
+            <span class="acc-badge off" id="insBadge">Not Started</span>
+            <span class="acc-chev">▼</span>
+          </div>
+          <div class="acc-body">
+            <div class="acc-inner">
+              <div id="insEmpty">
+                <div class="acc-desc">We'll help you get coverage — it's simpler than it sounds and usually required by landlords.</div>
+              </div>
+              <div id="insData" style="display:none">
+                <div class="ins-row-dash"><div class="ins-ico">📅</div><div><div class="ins-lbl">Coverage period</div><div class="ins-val" id="insDates">—</div></div></div>
+                <div class="ins-row-dash"><div class="ins-ico">💵</div><div style="flex:1"><div class="ins-lbl">Estimated premium</div><div class="ins-bigval" id="insQuote">—</div></div><div class="ins-badge">Quote</div></div>
+                <button class="cta-btn" onclick="showToast('Connecting you with an agent…')">Send Quote to Agent →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Documents -->
+        <div class="acc-section" id="accDocs">
+          <div class="acc-header" onclick="toggleAcc('accDocs')">
+            <div class="acc-circle" id="docsCircle"></div>
+            <span class="acc-title">📄 Documents</span>
+            <span class="acc-badge off" id="docsBadge">None yet</span>
+            <span class="acc-chev">▼</span>
+          </div>
+          <div class="acc-body">
+            <div class="acc-inner">
+              <div id="docsEmpty">
+                <div class="acc-desc">Ready-to-download proposals and reports will appear here as professional PDFs.</div>
+              </div>
+              <div id="docsData" style="display:none"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+  </div><!-- /content-area -->
+</div><!-- /main-wrap -->
+
+
+<script>
+// ─── STATE ────────────────────────────────
+let sqft = 1200;
+let docsArr = [];
+const milestones = [
+  {label:'Define show concept',   s:'dn'},
+  {label:'Find & secure space',   s:'ip'},
+  {label:'Get insurance quote',   s:'lk'},
+  {label:'Draft landlord proposal', s:'lk'},
+  {label:'Production & install',  s:'lk'},
+  {label:'Marketing & promotion', s:'lk'},
+  {label:'Track sales & expenses',s:'lk'},
+  {label:'Generate final report', s:'lk'},
+];
+
+// ─── ACCORDION ───────────────────────────
+function toggleAcc(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+// ─── BOOT ────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  renderMs();
+  initChat();
+});
+
+function initChat() {
+  clearChat();
+  aiMsg(
+    `<strong>Welcome back, Maya!</strong> Let's keep building your Spring Gallery Show. 🎨<br><br>
+     Last time we covered your concept — a solo show of large-format paintings, roughly 15 works. Now it's time to <strong>find your space.</strong><br><br>
+     What city or neighborhood are you thinking?`,
+    `<div class="opt-row">
+       <button class="opt" onclick="pickCity('Chelsea, NYC')">Chelsea, NYC</button>
+       <button class="opt" onclick="pickCity('Bushwick, Brooklyn')">Bushwick, Brooklyn</button>
+       <button class="opt" onclick="pickCity('Silver Lake, LA')">Silver Lake, LA</button>
+       <button class="opt" onclick="pickCity('River North, Chicago')">River North, Chicago</button>
+     </div>
+     <p style="font-size:11.5px;color:var(--ink-40);margin-top:9px">Or type any city / zip code below ↓</p>`
+  );
+}
+
+// ─── FLOW 2: CITY → WORKS → BUDGET ─────
+function pickCity(city) {
+  lockOpts();
+  usrMsg(city);
+  showTyping();
+  after(1500, () => {
+    stopTyping();
+    dash('locEmpty','locData');
+    set('ld-area', city);
+    set('ld-rate', '$3–5 / sq ft');
+    setBadge('locBadge','warn','Researching');
+    document.getElementById('locCircle').className = 'acc-circle active';
+    openAcc('accLoc');
+
+    aiMsg(
+      `<strong>Great choice — ${city} has a thriving independent gallery scene.</strong><br><br>
+       Here's the area on the map. Commercial spaces near galleries tend to cluster around the highlighted zones.<br><br>
+       <em>Current market data for ${city}:</em>`,
+      `<div class="map-block">
+         <div class="map-lines">
+           <div class="map-grid-h" style="top:20%;left:0;right:0"></div>
+           <div class="map-grid-h" style="top:45%;left:0;right:0"></div>
+           <div class="map-grid-h" style="top:70%;left:0;right:0"></div>
+           <div class="map-grid-v" style="left:30%;top:0;bottom:0"></div>
+           <div class="map-grid-v" style="left:60%;top:0;bottom:0"></div>
+           <div class="map-grid-v" style="left:80%;top:0;bottom:0"></div>
+         </div>
+         <div class="map-pin">📍</div>
+         <div class="map-badge">${city} · Gallery District</div>
+       </div>
+       <div class="rate-grid">
+         <div class="rate-box"><div class="rate-lbl">Class A</div><div class="rate-val">$6–9</div></div>
+         <div class="rate-box best"><div class="rate-lbl">Class B ✓</div><div class="rate-val">$3–5</div></div>
+         <div class="rate-box"><div class="rate-lbl">Class C</div><div class="rate-val">$1.5–2.5</div></div>
+       </div>
+       <p style="font-size:12.5px;color:var(--ink-70);margin-top:10px;line-height:1.6"><strong>Class B spaces</strong> — converted retail or light industrial — are the sweet spot for short-term art rentals. Good natural light, flexible landlords.</p>
+       <p style="font-size:13px;color:var(--ink);font-weight:500;margin-top:10px">How many works are you showing? I'll use this to suggest the ideal square footage.</p>
+       <div class="slider-block">
+         <div class="sl-top"><span>Number of works</span><span class="sl-val" id="wrkVal">15 works</span></div>
+         <input type="range" min="5" max="40" value="15" id="wrkSlider" oninput="onWrkSlide(this.value)" onchange="finalizeWorks()">
+         <div class="sl-ends"><span>5</span><span>40 works</span></div>
+       </div>`
+    );
+  });
+}
+
+function onWrkSlide(v) {
+  document.getElementById('wrkVal').textContent = `${v} works`;
+}
+
+function finalizeWorks() {
+  const v = +document.getElementById('wrkSlider').value;
+  sqft = Math.round(v * 78 + 430);
+  document.getElementById('wrkSlider').disabled = true;
+  usrMsg(`${v} works — probably around ${sqft.toLocaleString()} sq ft`);
+  showTyping();
+  after(1400, () => {
+    stopTyping();
+    const lo = Math.round(sqft * 3 * 0.5);
+    const hi = Math.round(sqft * 5 * 0.75);
+    set('ld-sqft', `${sqft.toLocaleString()} sq ft`);
+    set('ld-rent', `$${lo.toLocaleString()}–$${hi.toLocaleString()} / mo`);
+
+    dash('budEmpty','budData');
+    setBadge('budBadge','ok','Active');
+    document.getElementById('budCircle').className = 'acc-circle active';
+    openAcc('accBud');
+    drawDonut();
+
+    aiMsg(
+      `<strong>${sqft.toLocaleString()} sq ft gives you a comfortable viewing experience</strong> for ${v} works — good sight lines and breathing room.<br><br>
+       At Class B rates in ${document.getElementById('ld-area').textContent}, expect roughly <strong>$${lo.toLocaleString()}–$${hi.toLocaleString()} per month.</strong><br><br>
+       Does this fit your budget?`,
+      `<div class="opt-row">
+         <button class="opt" onclick="budReply('yes')">Yes, that works 👍</button>
+         <button class="opt" onclick="budReply('no')">That's too high</button>
+         <button class="opt" onclick="budReply('unsure')">Help me figure it out</button>
+       </div>`
+    );
+  });
+}
+
+function budReply(t) {
+  lockOpts();
+  const labels = {yes:'Yes, that works 👍', no:"That's too high", unsure:'Help me figure it out'};
+  usrMsg(labels[t]);
+  showTyping();
+  after(1300, () => {
+    stopTyping();
+    if (t === 'no') {
+      aiMsg(
+        `<strong>Totally understandable.</strong> A few paths forward:<br><br>
+         Many landlords will donate a space short-term in exchange for promotional credit and a <strong>tax write-off.</strong> You'd get the space free; they get a charitable deduction.<br><br>
+         Want me to draft a <strong>Donation Request proposal</strong> for potential venues?`,
+        `<div class="opt-row">
+           <button class="opt" onclick="budReply('yes')">Yes, draft the proposal</button>
+           <button class="opt" onclick="budReply('unsure')">Walk me through the numbers first</button>
+         </div>`
+      );
+    } else if (t === 'unsure') {
+      aiMsg(
+        `<strong>Let's reverse-engineer it.</strong> A solo show typically breaks down like this:<br><br>
+         • Space rental: 45–50% of total<br>
+         • Insurance: 8–10% (usually required)<br>
+         • Production — framing, lighting, install: 20–25%<br>
+         • Marketing — print, digital, opening event: 10–15%<br><br>
+         <strong>What's your total ceiling?</strong> Even a rough number helps.`,
+        `<div class="opt-row">
+           <button class="opt" onclick="setCeil(2000)">Under $2,000</button>
+           <button class="opt" onclick="setCeil(5000)">$2,000–$5,000</button>
+           <button class="opt" onclick="setCeil(10000)">$5,000–$10,000</button>
+           <button class="opt" onclick="setCeil(15000)">$10,000+</button>
+         </div>`
+      );
+    } else {
+      goInsurance();
+    }
+  });
+}
+
+function setCeil(amt) {
+  lockOpts();
+  const l = {2000:'Under $2,000',5000:'$2,000–$5,000',10000:'$5,000–$10,000',15000:'$10,000+'};
+  usrMsg(l[amt]);
+  showTyping();
+  after(1100, () => { stopTyping(); goInsurance(); });
+}
+
+// ─── FLOW 3: INSURANCE ──────────────────
+function goInsurance() {
+  milestones[1].s = 'dn';
+  milestones[2].s = 'ip';
+  renderMs();
+  document.getElementById('locCircle').className = 'acc-circle done';
+  aiMsg(
+    `<strong>Space — sorted. ✓</strong><br><br>
+     Now let's get you covered. Most landlords require <strong>general liability insurance</strong> before handing over keys. It protects you and them if anything happens during the show.<br><br>
+     <em>Short-term event insurance is usually $200–$450 for a two-week show — often less than one dinner out.</em><br><br>
+     Fill in a few quick details for an instant estimate:`,
+    `<div class="ins-form">
+       <div class="ins-row-form">
+         <div class="fl"><label>Setup Date</label><input type="date" id="iSetup" value="2025-03-10"></div>
+         <div class="fl"><label>Show Closes</label><input type="date" id="iClose" value="2025-03-25"></div>
+       </div>
+       <div class="fl" style="margin-bottom:0">
+         <label>Insured Name (you or your business)</label>
+         <input type="text" id="iName" value="Maya Andersen">
+       </div>
+       <button class="gen-btn" id="insBtn" onclick="getInsQuote()">
+         <span>✦</span> Get Instant Estimate
+       </button>
+     </div>`
+  );
+}
+
+function getInsQuote() {
+  const btn = document.getElementById('insBtn');
+  btn.textContent = 'Estimating…';
+  btn.disabled = true;
+  document.querySelectorAll('.ins-form input').forEach(i => i.disabled = true);
+  const name = document.getElementById('iName').value || 'Maya Andersen';
+
+  showTyping();
+  after(1700, () => {
+    stopTyping();
+    dash('insEmpty','insData');
+    set('insDates','Mar 10 – Mar 25, 2025');
+    set('insQuote','$285 – $420');
+    setBadge('insBadge','warn','Quote Ready');
+    document.getElementById('insCircle').className = 'acc-circle active';
+    openAcc('accIns');
+
+    milestones[2].s = 'dn';
+    milestones[3].s = 'ip';
+    renderMs();
+
+    aiMsg(
+      `<strong>Here's your coverage estimate for ${name}:</strong><br><br>
+       A standard <strong>$1M general liability policy</strong> for your 15-day show should run <strong>$285–$420.</strong><br><br>
+       <em>This covers: bodily injury to visitors, property damage, and any landlord certificate requirements.</em><br><br>
+       You're now ready to make your official pitch. Want me to generate your landlord proposal?`,
+      `<div class="opt-row">
+         <button class="opt" onclick="genProposal()">✦ Generate My Landlord Proposal</button>
+         <button class="opt" onclick="genProposal()">Save quote &amp; continue</button>
+       </div>`
+    );
+  });
+}
+
+// ─── FLOW 4: PROPOSAL ───────────────────
+function genProposal() {
+  lockOpts();
+  usrMsg('✦ Generate My Landlord Proposal');
+  showTyping();
+  after(1200, () => {
+    showTyping();
+    after(2000, () => {
+      stopTyping();
+      addDoc('Landlord Proposal','PDF','Ready');
+      addDoc('Insurance Summary','PDF','Ready');
+
+      milestones[3].s = 'dn';
+      milestones[4].s = 'ip';
+      renderMs();
+      setBadge('locBadge','info','Proposal Sent');
+      document.getElementById('insCircle').className = 'acc-circle done';
+
+      aiMsg(
+        `<strong>Your Landlord Proposal is ready. 🎉</strong><br><br>
+         The two-page document includes:<br><br>
+         • <strong>Exhibition overview</strong> — your artistic statement and show concept<br>
+         • <strong>Space requirements</strong> — ${sqft.toLocaleString()} sq ft, preferred show dates<br>
+         • <strong>Insurance confirmation</strong> — coverage details attached<br>
+         • <strong>Artist credentials</strong> — bio and past exhibitions<br>
+         • <strong>Mutual benefit section</strong> — neighborhood visibility, press potential<br><br>
+         It's in your Documents panel, ready to download.`,
+        `<div style="padding:12px 14px;background:var(--accent-pale);border:1px solid rgba(108,92,231,.15);border-radius:12px;font-size:12.5px;line-height:1.7;color:var(--ink-70);margin-top:4px">
+           📞 <strong>Call first</strong> — a 2-min conversation warms the reception dramatically<br>
+           🗣 Lead with enthusiasm: <em>"I'd love to bring new foot traffic to your space"</em><br>
+           📬 Follow up within 3 business days if no reply
+         </div>
+         <div class="opt-row" style="margin-top:12px">
+           <button class="opt" onclick="dlProposal()">⬇ Download PDF</button>
+           <button class="opt" onclick="goProd()">Continue to production →</button>
+         </div>`
+      );
+    });
+  });
+}
+
+function dlProposal() {
+  lockOpts();
+  usrMsg('Download PDF');
+  after(500, () => {
+    aiMsg(`<strong>Downloading now ✓</strong><br><br>Saved to your Downloads folder. You're further along than most artists get in their first session — real progress.`, '');
+    showToast('Landlord Proposal downloaded');
+  });
+}
+
+function goProd() {
+  lockOpts();
+  usrMsg('Continue to production →');
+  showTyping();
+  after(1400, () => {
+    stopTyping();
+    aiMsg(
+      `<strong>Onto production!</strong> For ${sqft.toLocaleString()} sq ft with ~15 works you'll likely need:<br><br>
+       • Hanging hardware (picture rails, D-rings, or custom wall mounts)<br>
+       • Track lighting or clip-on spots<br>
+       • Opening reception setup<br><br>
+       Do you already have any installation equipment?`,
+      `<div class="opt-row">
+         <button class="opt" onclick="prodState('some')">I have some gear</button>
+         <button class="opt" onclick="prodState('none')">Starting from scratch</button>
+         <button class="opt" onclick="prodState('skip')">Skip to marketing</button>
+       </div>`
+    );
+  });
+}
+
+function prodState(s) {
+  lockOpts();
+  const l = {some:'I have some gear',none:'Starting from scratch',skip:'Skip to marketing'};
+  usrMsg(l[s]);
+  showTyping();
+  after(1300, () => {
+    stopTyping();
+    milestones[4].s = 'dn';
+    milestones[5].s = 'ip';
+    renderMs();
+    aiMsg(
+      `<strong>Noted.</strong> Production budget estimated at <strong>$800</strong> — we'll refine as you get real quotes.<br><br>
+       Here's where your show stands:`,
+      `<div style="padding:12px 14px;background:var(--accent-pale);border:1px solid rgba(108,92,231,.15);border-radius:12px;margin-top:2px">
+         <div style="font-size:10.5px;font-weight:700;color:var(--ink);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Show Status</div>
+         ${['Concept defined','Space identified & priced','Insurance estimated','Landlord proposal generated'].map(t=>`<div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-70);margin-bottom:5px"><span style="color:var(--green)">✓</span>${t}</div>`).join('')}
+         <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink);font-weight:500;margin-top:2px"><span style="color:var(--accent)">→</span>Production planning in progress</div>
+       </div>
+       <div class="opt-row" style="margin-top:12px">
+         <button class="opt" onclick="goMarketing()">Plan my marketing →</button>
+         <button class="opt" onclick="usrMsg('Save progress'); after(400,()=>aiMsg('All saved. Pick up anytime! 🎨',''))">Save &amp; continue later</button>
+       </div>`
+    );
+  });
+}
+
+function goMarketing() {
+  lockOpts();
+  usrMsg('Plan my marketing →');
+  showTyping();
+  after(1200, () => {
+    stopTyping();
+    milestones[5].s = 'ip';
+    renderMs();
+    aiMsg(
+      `<strong>Marketing is how your show fills the room.</strong> Most effective channels for a solo show:<br><br>
+       • <strong>Instagram / social</strong> — behind-the-scenes install content drives real interest<br>
+       • <strong>Email invite</strong> to your collector and friend list<br>
+       • <strong>Press release</strong> to local arts editors and bloggers<br>
+       • <strong>Opening event</strong> — one strong night generates word-of-mouth for the full run<br><br>
+       Want me to draft your <strong>press release</strong> and <strong>opening event invite</strong>?`,
+      `<div class="opt-row">
+         <button class="opt" onclick="genPressRelease()">✦ Generate press release</button>
+         <button class="opt" onclick="genPressRelease()">Draft opening invite</button>
+       </div>`
+    );
+  });
+}
+
+function genPressRelease() {
+  lockOpts();
+  usrMsg('✦ Generate press release');
+  showTyping();
+  after(1800, () => {
+    stopTyping();
+    addDoc('Press Release Draft','DOCX','Draft');
+    aiMsg(
+      `<strong>Press release drafted!</strong> It's in your Documents panel.<br><br>
+       <em>Tip: personalise the opening paragraph with what this body of work means to you — editors respond to genuine voice over promotional language.</em><br><br>
+       Your show is really taking shape, Maya. Anything else to prep before sending the proposal?`,
+      `<div class="opt-row">
+         <button class="opt" onclick="usrMsg('Track expenses'); after(400,()=>aiMsg('Expense tracking unlocked! Use 📎 below to log costs. I\\'ll auto-categorise and flag write-offs.',''))">Start tracking expenses</button>
+         <button class="opt" onclick="usrMsg('Show full dashboard');">See full dashboard</button>
+       </div>`
+    );
+  });
+}
+
+// ─── NEW PROJECT ─────────────────────────
+function newProject() {
+  set('projTitle','New Exhibition Project');
+  clearChat();
+  resetDash();
+  after(100, () => {
+    aiMsg(
+      `<strong>Welcome! Let's get your show off the ground. 🎨</strong><br><br>
+       First — what's your vision? Tell me what kind of exhibition you're thinking.`,
+      `<div class="opt-row">
+         <button class="opt" onclick="pickShowType('Solo Show')">🎭 Solo Show</button>
+         <button class="opt" onclick="pickShowType('Group Show')">👥 Group Show</button>
+         <button class="opt" onclick="pickShowType('Pop-Up')">⚡ Pop-Up</button>
+         <button class="opt" onclick="pickShowType('Not Sure Yet')">🤔 Not Sure Yet</button>
+       </div>`
+    );
+  });
+}
+
+function pickShowType(t) {
+  lockOpts();
+  usrMsg(t);
+  showTyping();
+  const copy = {
+    'Solo Show': 'A solo show is your moment to present a cohesive body of work. These run 2–4 weeks and give you full creative control over the narrative.',
+    'Group Show': 'Group shows spread costs and effort — and draw larger audiences through combined networks.',
+    'Pop-Up': 'Pop-ups build buzz quickly. Usually 2–5 days in unexpected spaces — vacant retail, rooftops, even private homes.',
+    'Not Sure Yet': 'Exploring is part of the process! Let\'s figure out what fits your work and budget as we go.'
+  };
+  after(1200, () => {
+    stopTyping();
+    aiMsg(
+      `<strong>A ${t} — exciting!</strong><br><br>${copy[t]}<br><br>What city are you planning to show in?`,
+      `<div class="opt-row">
+         <button class="opt" onclick="pickCity('Chelsea, NYC')">Chelsea, NYC</button>
+         <button class="opt" onclick="pickCity('Bushwick, Brooklyn')">Bushwick, Brooklyn</button>
+         <button class="opt" onclick="pickCity('Silver Lake, LA')">Silver Lake, LA</button>
+         <button class="opt" onclick="pickCity('River North, Chicago')">River North, Chicago</button>
+       </div>
+       <p style="font-size:11.5px;color:var(--ink-40);margin-top:8px">Or type any city / zip code ↓</p>`
+    );
+  });
+}
+
+function insertUploadPrompt() {
+  aiMsg(
+    `<strong>Upload a document</strong><br>I can read leases, insurance docs, receipts, or reference files.`,
+    `<div class="upload-zone" onclick="this.querySelector('input').click()">
+       <input type="file" style="display:none" onchange="handleUpload(this)">
+       <div class="uz-icon">📄</div>
+       <div class="uz-txt">Drop a file or click to browse</div>
+       <div class="uz-sub">PDF, DOCX, JPG, PNG · max 10 MB</div>
+     </div>`
+  );
+}
+
+function handleUpload(inp) {
+  const f = inp.files[0];
+  if (!f) return;
+  usrMsg(`📎 Attached: ${f.name}`);
+  showTyping();
+  after(1500, () => {
+    stopTyping();
+    aiMsg(`<strong>Got it — I've processed ${f.name}.</strong><br><br>I'll reference it as we continue. Leases get flagged for issues; receipts get auto-categorised.`,'');
+  });
+}
+
+function sendFreeText() {
+  const inp = document.getElementById('textInput');
+  const t = inp.value.trim();
+  if (!t) return;
+  usrMsg(t);
+  inp.value = '';
+  showTyping();
+  after(1300, () => {
+    stopTyping();
+    aiMsg(`Thanks for sharing that! I've noted it in your project. Use the option buttons above to continue the planning flow, or ask me anything.`,'');
+  });
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendFreeText(); }
+}
+
+// ─── HELPERS ─────────────────────────────
+function aiMsg(text, extras='') {
+  const cb = document.getElementById('chatBody');
+  const g = document.createElement('div');
+  g.className = 'msg-group';
+  g.innerHTML = `<div class="msg-row"><div class="bubble ai"><div>${text}</div>${extras?`<div>${extras}</div>`:''}</div></div>`;
+  cb.appendChild(g);
+  cb.scrollTop = cb.scrollHeight;
+}
+
+function usrMsg(text) {
+  const cb = document.getElementById('chatBody');
+  const g = document.createElement('div');
+  g.className = 'msg-group';
+  g.innerHTML = `<div class="msg-row usr"><div class="bubble usr">${text}</div></div>`;
+  cb.appendChild(g);
+  cb.scrollTop = cb.scrollHeight;
+}
+
+function showTyping() {
+  const cb = document.getElementById('chatBody');
+  const g = document.createElement('div');
+  g.id = 'typing';
+  g.className = 'msg-group';
+  g.innerHTML = `<div class="thinking-row"><span class="thinking-ico">✨</span><span class="thinking-txt">Thinking...</span></div>`;
+  cb.appendChild(g);
+  cb.scrollTop = cb.scrollHeight;
+}
+
+function stopTyping() {
+  const t = document.getElementById('typing');
+  if (t) t.remove();
+}
+
+function lockOpts() {
+  document.querySelectorAll('.opt:not(.off)').forEach(b => b.classList.add('off'));
+}
+
+function clearChat() { document.getElementById('chatBody').innerHTML = ''; }
+function set(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; }
+function setBadge(id, cls, text) { const el = document.getElementById(id); if (!el) return; el.className = `acc-badge ${cls}`; el.textContent = text; }
+function dash(emptyId, dataId) { const e = document.getElementById(emptyId); const d = document.getElementById(dataId); if (e) e.style.display='none'; if (d) d.style.display='block'; }
+function openAcc(id) { document.getElementById(id).classList.add('open'); }
+function after(ms, fn) { setTimeout(fn, ms); }
+
+function resetDash() {
+  ['locData','budData','insData','docsData'].forEach(id => { const el=document.getElementById(id); if(el) el.style.display='none'; });
+  ['locEmpty','budEmpty','insEmpty','docsEmpty'].forEach(id => { const el=document.getElementById(id); if(el) el.style.display=''; });
+  setBadge('locBadge','warn','Researching');
+  setBadge('budBadge','off','Not Started');
+  setBadge('insBadge','off','Not Started');
+  setBadge('docsBadge','off','None yet');
+  ['locCircle','budCircle','insCircle','docsCircle'].forEach(id => { document.getElementById(id).className='acc-circle'; });
+  document.getElementById('locCircle').className = 'acc-circle active';
+  document.getElementById('msCircle').className = 'acc-circle active';
+  docsArr = [];
+  milestones.forEach((m,i) => m.s = i===0?'dn':i===1?'ip':'lk');
+  renderMs();
+  document.querySelectorAll('.acc-section').forEach(s=>s.classList.remove('open'));
+  openAcc('accLoc');
+}
+
+function renderMs() {
+  const list = document.getElementById('msList');
+  const icons = { lk:'🔒', ip:'●', dn:'✓' };
+  list.innerHTML = milestones.map((m,i) => `
+    <div class="ms-item">
+      <div class="ms-ico ${m.s}">${icons[m.s]}</div>
+      <div class="ms-txt ${m.s}">${m.label}</div>
+      <div class="ms-num">${i+1}</div>
+    </div>`).join('');
+  const done = milestones.filter(m=>m.s==='dn').length;
+  const pct = Math.round(done/milestones.length*100);
+  document.getElementById('msFill').style.width = pct+'%';
+  setBadge('msBadge','warn',`${done} of 8`);
+}
+
+function addDoc(name, type, status) {
+  docsArr.push({name,type,status,date:'Today'});
+  const dd = document.getElementById('docsData');
+  const de = document.getElementById('docsEmpty');
+  de.style.display='none';
+  dd.style.display='block';
+  setBadge('docsBadge','ok',`${docsArr.length} ready`);
+  document.getElementById('docsCircle').className = 'acc-circle active';
+  openAcc('accDocs');
+  dd.innerHTML = docsArr.map(d=>`
+    <div class="doc-item">
+      <div class="doc-ico">📄</div>
+      <div class="doc-info">
+        <div class="doc-nm">${d.name}</div>
+        <div class="doc-meta">${d.date} · ${d.type} · <span style="color:var(--green);font-weight:600">${d.status}</span></div>
+      </div>
+      <div class="doc-dl" title="Download">⬇</div>
+    </div>`).join('');
+}
+
+function drawDonut() {
+  const c = document.getElementById('donut');
+  if (!c) return;
+  const ctx = c.getContext('2d');
+  const segs = [
+    {color:'#6C5CE7',v:.50},
+    {color:'#FDCB6E',v:.09},
+    {color:'#00B894',v:.32},
+    {color:'#FD79A8',v:.06},
+  ];
+  ctx.clearRect(0,0,85,85);
+  let a = -Math.PI/2;
+  const cx=42.5,cy=42.5,r=33,lw=10;
+  segs.forEach(s=>{
+    const sw=s.v*2*Math.PI;
+    ctx.beginPath();
+    ctx.arc(cx,cy,r,a,a+sw);
+    ctx.lineWidth=lw;
+    ctx.strokeStyle=s.color;
+    ctx.lineCap='round';
+    ctx.stroke();
+    a+=sw+.03;
+  });
+}
+
+function showToast(msg) {
+  const old = document.querySelector('.toast');
+  if (old) old.remove();
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  after(2800, () => t.remove());
+}
+</script>
+</body>
+</html>
